@@ -22,6 +22,10 @@ import random
 import subprocess
 import sys
 import time
+
+import torch
+import gc
+
 from copy import deepcopy
 from datetime import datetime
 from pathlib import Path
@@ -338,6 +342,9 @@ def train(hyp, opt, device, callbacks):  # hyp is path/to/hyp.yaml or hyp dictio
                 if callbacks.stop_training:
                     return
             # end batch ------------------------------------------------------------------------------------------------
+            
+            gc.collect()
+            torch.cuda.empty_cache()
 
         # Scheduler
         lr = [x['lr'] for x in optimizer.param_groups]  # for loggers
